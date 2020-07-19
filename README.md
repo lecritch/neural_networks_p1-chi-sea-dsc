@@ -13,11 +13,11 @@ The "Perceptron" the first trainable neural network was created by Frank Rosenbl
 
 ## Inspiration from Actual Neurons
 
-The composition of neural networks is loosly based on a neuron.
+The composition of neural networks can bee **loosely** compared to a neuron.  We will be using it as an analogy to help us remember what is going on, but really, the comparison should stop there.
 
 ![neuron](img/neuron.png)
 
-This is a loose analogy, but can be a helpful **mneumonic** (If I don't stress that this is a mneumonic, my sister might put out a hit on me). The inputs to our node are like inputs to our neurons.  They are either direct sensory information (our features) or input from other axons (nodes passing information to other nodes).  The body of our neuron (soma) is where the signals of the dentrites are summed together, which is loosely analogous to our **collector function**. If the summed signal is large enough (our **activation function**), they trigger an action potential which travels down the axon to be passed as output to other dentrites ([wikipedia neuron article](https://en.wikipedia.org/wiki/Neuron)). 
+This is a loose analogy, but can be a helpful **mneumonic** (If I don't keep stressing this, my biologist sister might put out a hit on me). The inputs to our node are like inputs to our neurons.  They are either direct sensory information (our features) or input from other axons (nodes passing information to other nodes).  The body of our neuron (soma) is where the signals of the dentrites are summed together, which is loosely analogous to our **collector function**. If the summed signal is large enough (our **activation function**), they trigger an action potential which travels down the axon to be passed as output to other dentrites ([wikipedia neuron article](https://en.wikipedia.org/wiki/Neuron)). 
 
 # Forward Propogation
 
@@ -37,7 +37,20 @@ Our weights vector will have the same number of weights as pixels
 
 We will instantiate our weight with small random numbers.
 
-### Question: If we think ahead for a moment to a multilayer perceptron, take a guess as to what problem would occur if we happen if we set all of the weights to zero?
+
+# Question: What shape should our weight matrix have?
+
+
+```python
+"The number of pixels by the number of nodes: 64x1"
+```
+
+
+
+
+    'The number of pixels by the number of nodes: 64x1'
+
+
 
 We can set our bias term to 0: there is ony one for a singal perceptron
 
@@ -76,9 +89,13 @@ Then we pass it into an activation function. The activation function converts ou
 
 
 
-We can specify the activation function of both hidden layers and output.
+When we build our models in Keras, we will specify the activation function of both hidden layers and output.
 
 # Question: What is an activation function we have come across? 
+
+![don't look down](https://media.giphy.com/media/kGX9vntSO8McNlDaVj/giphy.gif)
+
+Activation functions play the role of converting our output to a specific form. The sigmoid function converts linear equation from a number that could be any number $-\infty$ to $\infty$, to a number between 0 and 1.  This conveniently allowed us to associate the output as a probability of a certain class.
 
 We have a suite of activation functions to choose from.
 
@@ -87,7 +104,7 @@ We have a suite of activation functions to choose from.
 
 **tanh**: $f(x) = tanh(x) = \frac{e^x - e^{-x}}{e^x + e^{-x}}$
 
-tanh a shifted version of the sigmoid. The inflection point passes through 0,0 instead of 0,.5, and the output is between -1 and 1.  This means the mean of the output is centered around 0, which can make learning in the next layer easier.  tanh is almost always better in a **hidden layer**. For the output layer, however, sigmoid makes sense for binary outcomes.  If we require an output of 0 or 1, it makes sense for the activation function to output between 0 and 1, rather than -1 and 1.
+tanh a shifted version of the sigmoid. The inflection point passes through 0,0 instead of 0,.5, and the output is between -1 and 1.  This means the mean of the output is centered around 0, which can make learning in the next layer easier.  tanh is almost always better in a **hidden layer** than the sigmoid. For the output layer, however, sigmoid makes sense for binary outcomes.  If we require an output of 0 or 1, it makes sense for the activation function to output between 0 and 1, rather than -1 and 1.
 
 One problem with tanh (and sigmoid), is that if our input is large, then the slope of the activation function flattens out.  When conducting backpropogation, we will use the derivative of the activation function as one of our terms multiplied by a learning rate to determine how big a step to take when adjusting our weights.  If our derivative is close to zero, the step will be very small, so the speed of our learning will be very slow, which is a huge problem.  This is called the **vanishing gradient** problem.
 
@@ -97,7 +114,7 @@ ReLU, or rectified linear unit, outputs 0 for negative numbers, and the original
 
 **ReLU**: $f(x) = 0$ if $x\leq 0$; $f(x) = x$ otherwise
 
-ReLU is a commonly used and effective activation function because of speed.  Given that the output is zero when negative, some nodes become inactive (i.e. produce an output of 0).  Zero outputs take little computational power. Also, the constant gradient leads to faster processing speed in comparison to sigmoid and tanh, which come close to 0 with large positve and negative values. 
+ReLU is a commonly used and effective activation function because of speed.  Given that the output is zero when negative, some nodes become inactive (i.e. produce an output of 0).  Zero outputs take little computational power. Also, the constant gradient leads to faster learning in comparison to sigmoid and tanh, which come close to 0 with large positive and negative values.  Since the speed of our network is linked to the derivative, a derivative close to zero will result in very slow learning.
 
 Notice that ReLU ("Rectified Linear Unit") increases without bound as $x\rightarrow\infty$. The advantages and drawbacks of this are discussed on [this page on stackexchange](https://stats.stackexchange.com/questions/126238/what-are-the-advantages-of-relu-over-sigmoid-function-in-deep-neural-networks)
 
@@ -170,80 +187,114 @@ Now each of these neurons has a set of weights and a bias associated with it.
 # 4x1
 ```
 
-## Model Training
-
-![toomuch](img/much-data-too-much-data.jpg)
-
-Unlike other models that can take all the data in the training set, neural nets generally don't accept the entire dataset all at once. Thus we often want to specify a *batch size*, which will break our data up into chunks of that size.
-
-Example: $ 2,000$ data points, _batch size_ **500**
-
-# Loss Function
-
-Our loss function is associated with the nature of our output.
-
-In logistic regression, our output was binary, so our cost function was the negative loglikelihood, aka cross-entropy.
-
-$$ \Large -\ loglikelihood = -\frac{1}{m} * \sum\limits_{i=1}^m y_i\log{p_i} + (1-y_i)\log(1-p_i) $$
-    
-
-We pass the our data through the network, and calculate the loss function according to the nature of the output.  
-
-Here is a good summary of different [loss functions]( https://ml-cheatsheet.readthedocs.io/en/latest/loss_functions.html):
-   
-
-When we train our models with Keras, we will watch the loss function's progress across epochs.  A decreasing loss function will show us that our model is **improving**.
-
 ## Back propagation
 
 Moreover, neural nets are dynamic in the sense that, after a certain number of data points have been passed through the model, the weights will be *updated* with an eye toward optimizing our loss function. (Thinking back to biological neurons, this is like revising their activation potentials.) Typically, this is  done  by using some version of gradient descent.
 
 ![bprop](img/BackProp_web.png)
 
-The graphic below can be a bit frustrating since it moves fast, but follow the progress as so:
+### Loss Function
 
-Forward propogation with the blue tinted arrows computes the output of each layer: i.e. a summation and activation.
+The loss function tells us how well our model performed by comparing the predictions to the actual values.
 
-Backprop calculates the partial derivative (green circles) for each weight (brown line) and bias.
+When we train our models with Keras, we will watch the loss function's progress across epochs.  A decreasing loss function will show us that our model is **improving**.
 
-Then the optimizer multiplies a learning rate to each partial derivative to calculate a new weight which will be applied to the next batch that passes through.
+The loss function is associated with the nature of our output. In logistic regression, our output was binary, so our cost function was the negative loglikelihood, aka **cross-entropy**.
 
-![backprop](img/ff-bb.gif)
+$$ \Large -\ loglikelihood = -\frac{1}{m} * \sum\limits_{i=1}^m y_i\log{p_i} + (1-y_i)\log(1-p_i) $$
+    
 
-With logistic activation we use **cross entropy** (negative loglikelihood) as our loss function.
+For continuous variables, the loss function we have relied on is [MSE or MAE](http://rishy.github.io/ml/2015/07/28/l1-vs-l2-loss/).
 
-For each weight and beta, we calculate the partial derivative of the loss function with regard to that weight.
+Good [resource](https://mattmazur.com/2015/03/17/a-step-by-step-backpropagation-example/) on backpropogation with RMSE loss function.
+
+Here is a good summary of different [loss functions]( https://ml-cheatsheet.readthedocs.io/en/latest/loss_functions.html):
+   
+
+We use the loss function to calculate the gradient.  The gradient of the loss function is calculated in relation to each parameter of our neural net.
+
+$$\large dw_1 = \displaystyle\frac{d\mathcal{L}(\hat y , y)}{d w_1} = \displaystyle\frac{d\mathcal{L}(\hat y , y)}{d \hat y}\displaystyle\frac{d\hat y}{dz}\displaystyle\frac{dz}{d w_1} = x_1 dz $$
+
+Working through the Learn's Intro to Neural Networks will allow you to dive deep into the partial derivatives. For now, I will just point out that the derivative of the weight is multiplied by the derivative of our activation function, *dz*.  Here you can get a glimpse of the problem with the sigmoid/tanh as an activation function for a hidden layer.  Since the derivative of the sigmoid approaches zero for very large positive or negative numbers, the update to the parameters (the partial derivative multiplied by a learning rate ($ \alpha $) approaches zero.
+
+$$w_1 := w_1 - \alpha dw_1$$
+
+The speed of our neural net goes way down as a result, since the updates are so incrementally small.
 
 For a deep dive into the fitting process, reference Chapter 11 in [Elements of Statistical Learning](https://web.stanford.edu/~hastie/ElemStatLearn/printings/ESLII_print12.pdf)
 
-Given that we are only passing *some* data points through at any one time, the question of *when* to update the weights becomes pressing. Standardly, we'd wait until we've passed all the data through before updating, but we might try updating after each batch ("batch gradient descent") or even after each point ("stochastic gradient descent"). [This post](https://datascience.stackexchange.com/questions/27421/when-are-weights-updated-in-cnn) has more details.
+# Gradient Descent, Epochs, and Batches
 
-To be clear, backpropogation calculates the gradient for each weight and bias, in each layer, including the input layer, for each batch.
+Gradient descent can be performed in several different ways.  Unlike sklearn implimentation of linear regression, which finds the minimum of the loss with a closed form solution, neural networks move down the gradient **incrementally.**  
 
-Good [resource](https://mattmazur.com/2015/03/17/a-step-by-step-backpropagation-example/) on backpropogation with RMSE loss function.
+When we run our neural nets in Keras, we can set the hyperparameter verbose equal to 1, and we will see progress through **epochs**
+
+![epoch](img/2014-10-28_anthropocene.png)
+
+At the end of each epoch, **all examples** from are training set have passed through the network.
+
+Different types of gradient descent update the parameters at different times.
+
+### Batch Gradient Descent
+
+The gradient is calculated across all values.  We can find the direction of the gradient, and proceed directly towards the minimum .
+
+The weights are updated with regard to the cost at the **end of an epoch** after all training elements have passed through.
+
+### Stochastic Gradient Descent
+
+Updating the weights after all training examples have passed through can be detrimentally slow.  
+
+SGD updates the weights after each training example. SGD requires less epochs to achieve quality coefficients. This speeds up gradient descent significantly [link](https://machinelearningmastery.com/gradient-descent-for-machine-learning/).
+
+### Mini-Batch Gradient Descent
+
+In mini-batch, we pass a batch, calculated the gradient, update the params, then proceed to the next batch.  It combines the advantages of batch and stochastic gradient descent: it is more faster than SGD since the updates are not made with each point, and more computationally efficient than batch, since all training examples don't have to fit in memory.
+
+[Good comparison of types of Gradient Descent and batch size](https://machinelearningmastery.com/gentle-introduction-mini-batch-gradient-descent-configure-batch-size/)
+
+> Tip 1: A good default for batch size might be 32.  
+    - batch size is typically chosen between 1 and a few hundreds, e.g. batch size = 32 is a good default value, 
+
+
 
 # Optimizers
 
 One of the levers we can tweek are the optimizers which control how the weights and biases are updated.
 
-For stochastic gradient descent, the weights are updated with a constant learning rate (alpha) after every record.  If we specify a batch size, the constant learning rate is multiplied by the gradient across the batch. 
+For stochastic gradient descent, the weights are updated with a **constant** learning rate (alpha) after every record.  If we specify a batch size, the constant learning rate is multiplied by the gradient across the batch. 
 
-Other optimizers, such as Adam (not an acronym) adapts the learning rate to each parameter. 
-
-[This article](https://machinelearningmastery.com/adam-optimization-algorithm-for-deep-learning/) has a nice discussion of Adam.
-
-For the mathematical details, check out [this post](https://mattmazur.com/2015/03/17/a-step-by-step-backpropagation-example/).
-
-To be clear, the optimizer multiplies the learning rate by the gradient and subtracts it from the original parameter value after each batch.
-
-## Model Training - epochs
-![epock](img/2014-10-28_anthropocene.png)
-
-When all four batches of 500 observations go through the NN, one **epoch** is completed. 
+Other optimizers, such as **Adam** (not an acronym) update the weights in different ways. For Adam,
+> A learning rate is maintained for each network weight (parameter) and separately adapted as learning unfolds. [source](https://machinelearningmastery.com/adam-optimization-algorithm-for-deep-learning/) 
 
 
-Generally speaking, one epoch is NOT enough to see significant error reduction. But, because of the power of gradient descent, there are often very significant strides  made after a few tens or hundreds of epochs.
 
-If you would like to continue the analogy of the brain, the neurons have evolved to incorporate new relationships between them.  The network has adapted to the stimulus via adjusted weights and biases.  The network has learned that certain relationships are not useful to the job at hand.  Certain parts of the brain grow, certain parts atrophy.  
 
-By the late epoch, the network has evolved so that the neuronal connections are suited to the problem at hand.  
+
+To be clear, backpropogation calculates the gradient for each weight and bias, in each layer, including the input layer, for each **batch**.
+
+So, to be clear:
+
+For mini-batch gradient descent, we:
+    - pass in a specified random sample of our training set
+    - the set propogates forward through our network
+    - each node sums the input, adds a bias, and applies an activation function to pass to the next layer.
+    - We make predictions on the output layer, then calculate the loss for back propogation.
+    - We calculate the derivative of the loss with regard to each weight and bias.
+    - We multiply that derivative by a learning rate determined by our optimizer.
+    - We update our parameters.
+    - We repeat for each batch until all examples have been used.
+    - We progress to the next epoch.
+ 
+
+
+
+![backprop](img/ff-bb.gif)
+
+The graphic above can be a bit frustrating since it moves fast, but follow the progress as so:
+
+Forward propogation with the **blue** tinted arrows computes the output of each layer: i.e. a summation and activation.
+
+Backprop calculates the partial derivative (**green** circles) for each weight (**brown** line) and bias.
+
+Then the optimizer multiplies a **learning rate** ($\eta$) to each partial derivative to calculate a new weight which will be applied to the next batch that passes through.
