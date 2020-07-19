@@ -5,7 +5,30 @@
 ```python
 import numpy as np
 from matplotlib import pyplot as plt
+
+mccalister = ['Adam', 'Amanda','Chum', 'Dann',
+ 'Jacob', 'Jason', 'Johnhoy', 'Karim',
+'Leana','Luluva', 'Matt', 'Maximilian','Syd' ]
+
+# This is always a good idea
+%load_ext autoreload
+%autoreload 2
+
+import os
+import sys
+module_path = os.path.abspath(os.path.join(os.pardir, os.pardir))
+if module_path not in sys.path:
+    sys.path.append(module_path)
+    
+from src.student_caller import one_random_student
+
+import warnings
+warnings.filterwarnings('ignore')
 ```
+
+    The autoreload extension is already loaded. To reload it, use:
+      %reload_ext autoreload
+
 
 # Background
 
@@ -19,11 +42,11 @@ The "Perceptron" the first trainable neural network was created by Frank Rosenbl
 
 ## Inspiration from Actual Neurons
 
-The composition of neural networks is loosly based on a neuron.
+The composition of neural networks can bee **loosely** compared to a neuron.  We will be using it as an analogy to help us remember what is going on, but really, the comparison should stop there.
 
 ![neuron](img/neuron.png)
 
-This is a loose analogy, but can be a helpful **mneumonic** (If I don't stress that this is a mneumonic, my sister might put out a hit on me). The inputs to our node are like inputs to our neurons.  They are either direct sensory information (our features) or input from other axons (nodes passing information to other nodes).  The body of our neuron (soma) is where the signals of the dentrites are summed together, which is loosely analogous to our **collector function**. If the summed signal is large enough (our **activation function**), they trigger an action potential which travels down the axon to be passed as output to other dentrites ([wikipedia neuron article](https://en.wikipedia.org/wiki/Neuron)). 
+This is a loose analogy, but can be a helpful **mneumonic** (If I don't keep stressing this, my biologist sister might put out a hit on me). The inputs to our node are like inputs to our neurons.  They are either direct sensory information (our features) or input from other axons (nodes passing information to other nodes).  The body of our neuron (soma) is where the signals of the dentrites are summed together, which is loosely analogous to our **collector function**. If the summed signal is large enough (our **activation function**), they trigger an action potential which travels down the axon to be passed as output to other dentrites ([wikipedia neuron article](https://en.wikipedia.org/wiki/Neuron)). 
 
 # Forward Propogation
 
@@ -113,17 +136,16 @@ Our weights vector will have the same number of weights as pixels
 
 We will instantiate our weight with small random numbers.
 
-### Question: If we think ahead for a moment to a multilayer perceptron, take a guess as to what problem would occur if we happen if we set all of the weights to zero?
 
-
-```python
-# Answer
-```
-
-
-```python
 # Question: What shape should our weight matrix have?
+
+
+```python
+one_random_student(mccalister)
 ```
+
+    Maximilian
+
 
 
 ```python
@@ -134,11 +156,11 @@ w[:5]
 
 
 
-    array([[0.03981703],
-           [0.00733532],
-           [0.08749188],
-           [0.09041739],
-           [0.04282014]])
+    array([[0.01847129],
+           [0.02365698],
+           [0.09886813],
+           [0.05643522],
+           [0.02663657]])
 
 
 
@@ -165,11 +187,19 @@ z
 
 
 
-    array([[17.90492741]])
+    array([[14.16780017]])
 
 
 
 # Question: Why do we have to transpose our flat_image?
+
+
+```python
+one_random_student(mccalister)
+```
+
+    Jacob
+
 
 
 ```python
@@ -182,17 +212,31 @@ Then we pass it into an activation function. The activation function converts ou
 
 
 
-We can specify the activation function of both hidden layers and output.
+When we build our models in Keras, we will specify the activation function of both hidden layers and output.
 
 # Question: What is an activation function we have come across? 
+
+
+```python
+one_random_student(mccalister)
+```
+
+    Dann
+
+
+![don't look down](https://media.giphy.com/media/kGX9vntSO8McNlDaVj/giphy.gif)
 
 
 ```python
 # Answer
 ```
 
+Activation functions play the role of converting our output to a specific form. The sigmoid function converts linear equation from a number that could be any number $-\infty$ to $\infty$, to a number between 0 and 1.  This conveniently allowed us to associate the output as a probability of a certain class.
+
 
 ```python
+# Z is the input from our collecter, the sum of the weights multiplied by the features and the bias
+
 def sigmoid(z):
     
     return 1/(1+np.e**(-z))
@@ -207,7 +251,7 @@ a
 
 
 
-    array([[0.99999998]])
+    array([[0.9999993]])
 
 
 
@@ -216,14 +260,14 @@ We have a suite of activation functions to choose from.
 
 ```python
 
-X = np.linspace(-100, 100, 20000)
+X = np.linspace(-10, 10, 20000)
 sig = sigmoid(X)
 
 plt.plot(X, sig);
 ```
 
 
-![png](index_files/index_39_0.png)
+![png](index_files/index_43_0.png)
 
 
 ## tanh
@@ -231,20 +275,20 @@ plt.plot(X, sig);
 
 **tanh**: $f(x) = tanh(x) = \frac{e^x - e^{-x}}{e^x + e^{-x}}$
 
-tanh a shifted version of the sigmoid. The inflection point passes through 0,0 instead of 0,.5, and the output is between -1 and 1.  This means the mean of the output is centered around 0, which can make learning in the next layer easier.  tanh is almost always better in a **hidden layer**. For the output layer, however, sigmoid makes sense for binary outcomes.  If we require an output of 0 or 1, it makes sense for the activation function to output between 0 and 1, rather than -1 and 1.
+tanh a shifted version of the sigmoid. The inflection point passes through 0,0 instead of 0,.5, and the output is between -1 and 1.  This means the mean of the output is centered around 0, which can make learning in the next layer easier.  tanh is almost always better in a **hidden layer** than the sigmoid. For the output layer, however, sigmoid makes sense for binary outcomes.  If we require an output of 0 or 1, it makes sense for the activation function to output between 0 and 1, rather than -1 and 1.
 
 
 ```python
 # Coding tanh:
 
-X = np.linspace(-10, 10, 200)
+X = np.linspace(-10, 10, 20000)
 y_tanh = (np.exp(X) - np.exp(-X)) / (np.exp(X) + np.exp(-X))
 
 plt.plot(X, y_tanh);
 ```
 
 
-![png](index_files/index_43_0.png)
+![png](index_files/index_47_0.png)
 
 
 
@@ -277,7 +321,7 @@ plt.plot(X, y_tanh);
 ```
 
 
-![png](index_files/index_47_0.png)
+![png](index_files/index_51_0.png)
 
 
 # ReLU
@@ -286,7 +330,7 @@ ReLU, or rectified linear unit, outputs 0 for negative numbers, and the original
 
 **ReLU**: $f(x) = 0$ if $x\leq 0$; $f(x) = x$ otherwise
 
-ReLU is a commonly used and effective activation function because of speed.  Given that the output is zero when negative, some nodes become inactive (i.e. produce an output of 0).  Zero outputs take little computational power. Also, the constant gradient leads to faster processing speed in comparison to sigmoid and tanh, which come close to 0 with large positve and negative values. 
+ReLU is a commonly used and effective activation function because of speed.  Given that the output is zero when negative, some nodes become inactive (i.e. produce an output of 0).  Zero outputs take little computational power. Also, the constant gradient leads to faster learning in comparison to sigmoid and tanh, which come close to 0 with large positive and negative values.  Since the speed of our network is linked to the derivative, a derivative close to zero will result in very slow learning.
 
 
 ```python
@@ -301,7 +345,7 @@ plt.plot(X, y_relu);
 ```
 
 
-![png](index_files/index_52_0.png)
+![png](index_files/index_56_0.png)
 
 
 
@@ -322,7 +366,7 @@ a
 
 
 
-    array([[17.90492741]])
+    array([[11.88799962]])
 
 
 
@@ -407,13 +451,13 @@ a_0
 
 
 
-    array([[0.99999993],
-           [0.99999997],
-           [0.99999999],
+    array([[0.99998881],
+           [0.99998851],
+           [0.99999976],
            ...,
-           [1.        ],
-           [0.99999999],
-           [0.99999975]])
+           [0.99999975],
+           [0.99999962],
+           [0.99999243]])
 
 
 
@@ -426,16 +470,16 @@ a_0_relu[:10]
 
 
 
-    [array([16.44606955]),
-     array([17.28505728]),
-     array([18.46683301]),
-     array([19.79842615]),
-     array([17.13103811]),
-     array([22.17275445]),
-     array([18.71691319]),
-     array([20.02190363]),
-     array([20.04801211]),
-     array([16.99987808])]
+    [array([11.4006103]),
+     array([11.3740089]),
+     array([15.25445796]),
+     array([13.32124049]),
+     array([11.72364798]),
+     array([18.22812126]),
+     array([15.32797183]),
+     array([14.29446005]),
+     array([14.03517985]),
+     array([15.68114616])]
 
 
 
@@ -485,13 +529,13 @@ z_1
 
 
 
-    array([[-3.43751327, -3.42955313, -5.76666396, -0.50931585],
-           [-5.13741177, -3.45879186,  0.37718496, -3.96348206],
-           [-3.40506893, -8.87931244, -4.30409105, -4.50740448],
+    array([[ -0.96657309, -10.37354677, -10.88464165,  -2.147581  ],
+           [ -2.96445823, -11.2872077 ,  -9.19432024,  -0.63203507],
+           [ -3.54210132, -15.31123522, -10.7219304 ,   1.99791247],
            ...,
-           [-5.92769122, -6.64483028, -2.56269359, -1.06600505],
-           [-3.40466876, -7.09420073, -0.88596371, -5.72753492],
-           [-6.49955199, -2.76260529, -3.02222097, -7.74918084]])
+           [ -5.41328573, -19.12287985,  -1.91474799,   2.77273493],
+           [  0.83420605, -20.7922142 ,   1.57724078,   3.75189613],
+           [ -2.64842288, -14.76183493,  -0.37921728,   6.67815852]])
 
 
 
@@ -504,13 +548,13 @@ a_1
 
 
 
-    array([[3.11434300e-02, 3.13845140e-02, 3.12041506e-03, 3.75353919e-01],
-           [5.83858116e-03, 3.05077461e-02, 5.93193970e-01, 1.86426982e-02],
-           [3.21374232e-02, 1.39220483e-04, 1.33329918e-02, 1.09067745e-02],
+    array([[2.75564084e-01, 3.12472863e-05, 1.87435589e-05, 1.04557486e-01],
+           [4.90576068e-02, 1.25320621e-05, 1.01604590e-04, 3.47049235e-01],
+           [2.81377683e-02, 2.24086109e-07, 2.20554141e-05, 8.80577726e-01],
            ...,
-           [2.65754556e-03, 1.29903947e-03, 7.15783335e-02, 2.56163555e-01],
-           [3.21498725e-02, 8.29215665e-04, 2.91943477e-01, 3.24453017e-03],
-           [1.50185394e-03, 5.93786859e-02, 4.64320395e-02, 4.30909767e-04]])
+           [4.43719528e-03, 4.95494458e-09, 1.28448379e-01, 9.41184564e-01],
+           [6.97243541e-01, 9.33374878e-10, 8.28813390e-01, 9.77065159e-01],
+           [6.60862812e-02, 3.88165004e-07, 4.06315694e-01, 9.98743488e-01]])
 
 
 
@@ -554,26 +598,26 @@ y_hat[:5]
 
 
     array([[0],
-           [0],
            [1],
-           [0],
-           [1]])
+           [1],
+           [1],
+           [0]])
 
 
 
-## Model Training
+## Back propagation
 
-![toomuch](img/much-data-too-much-data.jpg)
+Moreover, neural nets are dynamic in the sense that, after a certain number of data points have been passed through the model, the weights will be *updated* with an eye toward optimizing our loss function. (Thinking back to biological neurons, this is like revising their activation potentials.) Typically, this is  done  by using some version of gradient descent.
 
-Unlike other models that can take all the data in the training set, neural nets generally don't accept the entire dataset all at once. Thus we often want to specify a *batch size*, which will break our data up into chunks of that size.
+![bprop](img/BackProp_web.png)
 
-Example: $ 2,000$ data points, _batch size_ **500**
+### Loss Function
 
-# Loss Function
+The loss function tells us how well our model performed by comparing the predictions to the actual values.
 
-Our loss function is associated with the nature of our output.
+When we train our models with Keras, we will watch the loss function's progress across epochs.  A decreasing loss function will show us that our model is **improving**.
 
-In logistic regression, our output was binary, so our cost function was the negative loglikelihood, aka cross-entropy.
+The loss function is associated with the nature of our output. In logistic regression, our output was binary, so our cost function was the negative loglikelihood, aka **cross-entropy**.
 
 $$ \Large -\ loglikelihood = -\frac{1}{m} * \sum\limits_{i=1}^m y_i\log{p_i} + (1-y_i)\log(1-p_i) $$
     
@@ -591,19 +635,19 @@ y_train*np.log(output) + (1-y_train) * np.log(1-output)
 
 
 
-    array([[-0.69038107, -0.69038107, -0.69038107, ..., -0.69038107,
-            -0.69592097, -0.69592097],
-           [-0.67929836, -0.67929836, -0.67929836, ..., -0.67929836,
-            -0.70719049, -0.70719049],
-           [-0.69377312, -0.69377312, -0.69377312, ..., -0.69377312,
-            -0.69252164, -0.69252164],
+    array([[-0.67045971, -0.67045971, -0.67045971, ..., -0.67045971,
+            -0.71636135, -0.71636135],
+           [-0.69897023, -0.69897023, -0.69897023, ..., -0.69897023,
+            -0.68735784, -0.68735784],
+           [-0.71729024, -0.71729024, -0.71729024, ..., -0.71729024,
+            -0.66957329, -0.66957329],
            ...,
-           [-0.68853084, -0.68853084, -0.68853084, ..., -0.68853084,
-            -0.69778493, -0.69778493],
-           [-0.68706317, -0.68706317, -0.68706317, ..., -0.68706317,
-            -0.69926843, -0.69926843],
-           [-0.69326499, -0.69326499, -0.69326499, ..., -0.69326499,
-            -0.69302939, -0.69302939]])
+           [-0.72151471, -0.72151471, -0.72151471, ..., -0.72151471,
+            -0.66556222, -0.66556222],
+           [-0.65750989, -0.65750989, -0.65750989, ..., -0.65750989,
+            -0.73010157, -0.73010157],
+           [-0.71740907, -0.71740907, -0.71740907, ..., -0.71740907,
+            -0.66946001, -0.66946001]])
 
 
 
@@ -616,67 +660,106 @@ neg_ll
 
 
 
-    996.0970920824844
+    996.9623240042554
 
 
 
-We pass the our data through the network, and calculate the loss function according to the nature of the output.  
+For continuous variables, the loss function we have relied on is [MSE or MAE](http://rishy.github.io/ml/2015/07/28/l1-vs-l2-loss/).
+
+Good [resource](https://mattmazur.com/2015/03/17/a-step-by-step-backpropagation-example/) on backpropogation with RMSE loss function.
 
 Here is a good summary of different [loss functions]( https://ml-cheatsheet.readthedocs.io/en/latest/loss_functions.html):
    
 
-When we train our models with Keras, we will watch the loss function's progress across epochs.  A decreasing loss function will show us that our model is **improving**.
+We use the loss function to calculate the gradient.  The gradient of the loss function is calculated in relation to each parameter of our neural net.
 
-## Back propagation
+$$\large dw_1 = \displaystyle\frac{d\mathcal{L}(\hat y , y)}{d w_1} = \displaystyle\frac{d\mathcal{L}(\hat y , y)}{d \hat y}\displaystyle\frac{d\hat y}{dz}\displaystyle\frac{dz}{d w_1} = x_1 dz $$
 
-Moreover, neural nets are dynamic in the sense that, after a certain number of data points have been passed through the model, the weights will be *updated* with an eye toward optimizing our loss function. (Thinking back to biological neurons, this is like revising their activation potentials.) Typically, this is  done  by using some version of gradient descent.
+Working through the Learn's Intro to Neural Networks will allow you to dive deep into the partial derivatives. For now, I will just point out that the derivative of the weight is multiplied by the derivative of our activation function, *dz*.  Here you can get a glimpse of the problem with the sigmoid/tanh as an activation function for a hidden layer.  Since the derivative of the sigmoid approaches zero for very large positive or negative numbers, the update to the parameters (the partial derivative multiplied by a learning rate ($ \alpha $) approaches zero.
 
-![bprop](img/BackProp_web.png)
+$$w_1 := w_1 - \alpha dw_1$$
 
-The graphic below can be a bit frustrating since it moves fast, but follow the progress as so:
-
-Forward propogation with the blue tinted arrows computes the output of each layer: i.e. a summation and activation.
-
-Backprop calculates the partial derivative (green circles) for each weight (brown line) and bias.
-
-Then the optimizer multiplies a learning rate to each partial derivative to calculate a new weight which will be applied to the next batch that passes through.
-
-![backprop](img/ff-bb.gif)
-
-With logistic activation we use **cross entropy** (negative loglikelihood) as our loss function.
-
-For each weight and beta, we calculate the partial derivative of the loss function with regard to that weight.
+The speed of our neural net goes way down as a result, since the updates are so incrementally small.
 
 For a deep dive into the fitting process, reference Chapter 11 in [Elements of Statistical Learning](https://web.stanford.edu/~hastie/ElemStatLearn/printings/ESLII_print12.pdf)
 
-Given that we are only passing *some* data points through at any one time, the question of *when* to update the weights becomes pressing. Standardly, we'd wait until we've passed all the data through before updating, but we might try updating after each batch ("batch gradient descent") or even after each point ("stochastic gradient descent"). [This post](https://datascience.stackexchange.com/questions/27421/when-are-weights-updated-in-cnn) has more details.
+# Gradient Descent, Epochs, and Batches
 
-To be clear, backpropogation calculates the gradient for each weight and bias, in each layer, including the input layer, for each batch.
+Gradient descent can be performed in several different ways.  Unlike sklearn implimentation of linear regression, which finds the minimum of the loss with a closed form solution, neural networks move down the gradient **incrementally.**  
 
-Good [resource](https://mattmazur.com/2015/03/17/a-step-by-step-backpropagation-example/) on backpropogation with RMSE loss function.
+When we run our neural nets in Keras, we can set the hyperparameter verbose equal to 1, and we will see progress through **epochs**
+
+![epoch](img/2014-10-28_anthropocene.png)
+
+At the end of each epoch, **all examples** from are training set have passed through the network.
+
+Different types of gradient descent update the parameters at different times.
+
+### Batch Gradient Descent
+
+The gradient is calculated across all values.  We can find the direction of the gradient, and proceed directly towards the minimum .
+
+The weights are updated with regard to the cost at the **end of an epoch** after all training elements have passed through.
+
+### Stochastic Gradient Descent
+
+Updating the weights after all training examples have passed through can be detrimentally slow.  
+
+SGD updates the weights after each training example. SGD requires less epochs to achieve quality coefficients. This speeds up gradient descent significantly [link](https://machinelearningmastery.com/gradient-descent-for-machine-learning/).
+
+### Mini-Batch Gradient Descent
+
+In mini-batch, we pass a batch, calculated the gradient, update the params, then proceed to the next batch.  It combines the advantages of batch and stochastic gradient descent: it is more faster than SGD since the updates are not made with each point, and more computationally efficient than batch, since all training examples don't have to fit in memory.
+
+[Good comparison of types of Gradient Descent and batch size](https://machinelearningmastery.com/gentle-introduction-mini-batch-gradient-descent-configure-batch-size/)
+
+> Tip 1: A good default for batch size might be 32.  
+    - batch size is typically chosen between 1 and a few hundreds, e.g. batch size = 32 is a good default value, 
+
+
 
 # Optimizers
 
 One of the levers we can tweek are the optimizers which control how the weights and biases are updated.
 
-For stochastic gradient descent, the weights are updated with a constant learning rate (alpha) after every record.  If we specify a batch size, the constant learning rate is multiplied by the gradient across the batch. 
+For stochastic gradient descent, the weights are updated with a **constant** learning rate (alpha) after every record.  If we specify a batch size, the constant learning rate is multiplied by the gradient across the batch. 
 
-Other optimizers, such as Adam (not an acronym) adapts the learning rate to each parameter. 
-
-[This article](https://machinelearningmastery.com/adam-optimization-algorithm-for-deep-learning/) has a nice discussion of Adam.
-
-For the mathematical details, check out [this post](https://mattmazur.com/2015/03/17/a-step-by-step-backpropagation-example/).
-
-To be clear, the optimizer multiplies the learning rate by the gradient and subtracts it from the original parameter value after each batch.
-
-## Model Training - epochs
-![epock](img/2014-10-28_anthropocene.png)
-
-When all four batches of 500 observations go through the NN, one **epoch** is completed. 
+Other optimizers, such as **Adam** (not an acronym) update the weights in different ways. For Adam,
+> A learning rate is maintained for each network weight (parameter) and separately adapted as learning unfolds. [source](https://machinelearningmastery.com/adam-optimization-algorithm-for-deep-learning/) 
 
 
-Generally speaking, one epoch is NOT enough to see significant error reduction. But, because of the power of gradient descent, there are often very significant strides  made after a few tens or hundreds of epochs.
 
-If you would like to continue the analogy of the brain, the neurons have evolved to incorporate new relationships between them.  The network has adapted to the stimulus via adjusted weights and biases.  The network has learned that certain relationships are not useful to the job at hand.  Certain parts of the brain grow, certain parts atrophy.  
 
-By the late epoch, the network has evolved so that the neuronal connections are suited to the problem at hand.  
+
+To be clear, backpropogation calculates the gradient for each weight and bias, in each layer, including the input layer, for each **batch**.
+
+So, to be clear:
+
+For mini-batch gradient descent, we:
+    - pass in a specified random sample of our training set
+    - the set propogates forward through our network
+    - each node sums the input, adds a bias, and applies an activation function to pass to the next layer.
+    - We make predictions on the output layer, then calculate the loss for back propogation.
+    - We calculate the derivative of the loss with regard to each weight and bias.
+    - We multiply that derivative by a learning rate determined by our optimizer.
+    - We update our parameters.
+    - We repeat for each batch until all examples have been used.
+    - We progress to the next epoch.
+ 
+
+
+
+![backprop](img/ff-bb.gif)
+
+The graphic above can be a bit frustrating since it moves fast, but follow the progress as so:
+
+Forward propogation with the **blue** tinted arrows computes the output of each layer: i.e. a summation and activation.
+
+Backprop calculates the partial derivative (**green** circles) for each weight (**brown** line) and bias.
+
+Then the optimizer multiplies a **learning rate** ($\eta$) to each partial derivative to calculate a new weight which will be applied to the next batch that passes through.
+
+
+```python
+
+```
