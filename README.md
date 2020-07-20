@@ -122,10 +122,14 @@ There are many activation functions, [see here](https://towardsdatascience.com/c
 
 Neural networks draw their inspiration from the biology of our own brains, which are of course also accurately described as 'neural networks'. A human brain contains around $10^{11}$ neurons, connected very **densely**.
 
+![dense](img/dogcat.gif)
+
 Our nodes will be taking in input from multiple sources. Let's add the entire training set as our input. 
 
 
 Numpy allows us to easily calculate the predictions for the set of data:
+
+### Question: What dimension should our weight vector now be?
 
 
 ```python
@@ -139,6 +143,8 @@ location across the entire training set'''
     'The same as before.  Each weight is associated with one pixel \nlocation across the entire training set'
 
 
+
+### Question: What should be the dimension of the output of our collector function be?
 
 
 ```python
@@ -215,7 +221,7 @@ We not only use the the loss function to see our model is improving, we use it t
 
 $$\large dw_1 = \displaystyle\frac{d\mathcal{L}(\hat y , y)}{d w_1} = \displaystyle\frac{d\mathcal{L}(\hat y , y)}{d \hat y}\displaystyle\frac{d\hat y}{dz}\displaystyle\frac{dz}{d w_1} = x_1 dz $$
 
-Working through the Learn's Intro to Neural Networks will allow you to dive deep into the partial derivatives. For now, I will just point out that the derivative of the weight is multiplied by the derivative of our activation function, *dz*.  Here you can get a glimpse of the problem with the sigmoid/tanh as an activation function for a hidden layer.  Since the derivative of the sigmoid approaches zero for very large positive or negative numbers, the update to the parameters (the partial derivative multiplied by a learning rate ($ \alpha $)) approaches zero.
+Working through the Learn's Intro to Neural Networks will allow you to dive deep into the partial derivatives. For now, I will just point out that the derivative of the weight is multiplied by the derivative of our activation function, *$d\hat{y}$*.  Here you can get a glimpse of the problem with the sigmoid/tanh as an activation function for a hidden layer.  Since the derivative of the sigmoid approaches zero for very large positive or negative numbers, the update to the parameters (the partial derivative multiplied by a learning rate ($ \alpha $)) approaches zero.
 
 $$w_1 := w_1 - \alpha dw_1$$
 
