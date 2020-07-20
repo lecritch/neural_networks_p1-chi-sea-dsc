@@ -45,13 +45,6 @@ We will instantiate our weight with small random numbers.
 "The number of pixels by the number of nodes: 64x1"
 ```
 
-
-
-
-    'The number of pixels by the number of nodes: 64x1'
-
-
-
 We can set our bias term to 0: there is ony one for a singal perceptron
 
 ![sum](img/log-reg-nn-ex-sum.png)
@@ -72,16 +65,6 @@ print(flat_image.shape)
 # we need the column dimension of the left hand matrix to match the 
 # to match the row dimension of the right hand matrix
 ```
-
-    (64, 1)
-
-
-
-
-
-    (64, 1)
-
-
 
 ![activation](img/log-reg-nn-ex-a.png)
 
@@ -137,26 +120,12 @@ Numpy allows us to easily calculate the predictions for the set of data:
 location across the entire training set'''
 ```
 
-
-
-
-    'The same as before.  Each weight is associated with one pixel \nlocation across the entire training set'
-
-
-
 ### Question: What should be the dimension of the output of our collector function be?
 
 
 ```python
 '''1437x1 one sum for every image'''
 ```
-
-
-
-
-    '1437x1 one sum for every image'
-
-
 
 For our DS purposes, we'll generally imagine our network to consist of only a few layers, including an input layer (where we feed in our data) an output layer (comprising our predictions). Significantly, there will also (generally) be one or more layers of neurons between input and output, called **hidden layers**.
 
@@ -176,13 +145,6 @@ Each of our pixels from our digit representation goes to each of our nodes, and 
 ```python
 '''64x4 one weight for every pixel for each node'''
 ```
-
-
-
-
-    '64x4 one weight for every pixel for each node'
-
-
 
 Now each of these neurons has a set of weights and a bias associated with it.
 
