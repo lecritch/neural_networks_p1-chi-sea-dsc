@@ -32,7 +32,7 @@ warnings.filterwarnings('ignore')
 
 # Background
 
-Neural Networks have been around for a while. They are over 70 years old, dating back to  their proposal in 1944 by Warren McCullough and Walter Pitts. These first proposed neural nets had thresholds and weights, but no layers and no specific training mechanisms.
+Neural networks have been around for a while. They are over 70 years old, dating back to  their proposal in 1944 by Warren McCullough and Walter Pitts. These first proposed neural nets had thresholds and weights, but no layers and no specific training mechanisms.
 
 The "Perceptron" the first trainable neural network was created by Frank Rosenblatt in 1957. It consisted of a single layer with adjustable weights in the middle of input and output layers.
 
@@ -144,7 +144,7 @@ We will instantiate our weight with small random numbers.
 one_random_student(mccalister)
 ```
 
-    Maximilian
+    Jason
 
 
 
@@ -156,11 +156,11 @@ w[:5]
 
 
 
-    array([[0.01847129],
-           [0.02365698],
-           [0.09886813],
-           [0.05643522],
-           [0.02663657]])
+    array([[0.04320711],
+           [0.02877802],
+           [0.09541247],
+           [0.06892253],
+           [0.05450707]])
 
 
 
@@ -175,7 +175,7 @@ b = 0
 
 Our inputs, the pixel, each are multiplied by their respective weights and then summed together with the bias. 
 
-This ammounts to the dotproduct of the pixel value and the weights.
+This amounts to the dotproduct of the pixel value and the weights.
 
 
 
@@ -187,7 +187,7 @@ z
 
 
 
-    array([[14.16780017]])
+    array([[15.38991897]])
 
 
 
@@ -198,7 +198,7 @@ z
 one_random_student(mccalister)
 ```
 
-    Jacob
+    Leana
 
 
 
@@ -221,7 +221,7 @@ When we build our models in Keras, we will specify the activation function of bo
 one_random_student(mccalister)
 ```
 
-    Dann
+    Luluva
 
 
 ![don't look down](https://media.giphy.com/media/kGX9vntSO8McNlDaVj/giphy.gif)
@@ -238,7 +238,11 @@ Activation functions play the role of converting our output to a specific form. 
 # Z is the input from our collecter, the sum of the weights multiplied by the features and the bias
 
 def sigmoid(z):
+    '''
+    Input the sum of our weights times the pixel intensities, plus the bias
+    Output a number between 0 and 1.
     
+    '''
     return 1/(1+np.e**(-z))
 ```
 
@@ -251,7 +255,7 @@ a
 
 
 
-    array([[0.9999993]])
+    array([[0.99999979]])
 
 
 
@@ -275,7 +279,7 @@ plt.plot(X, sig);
 
 **tanh**: $f(x) = tanh(x) = \frac{e^x - e^{-x}}{e^x + e^{-x}}$
 
-tanh a shifted version of the sigmoid. The inflection point passes through 0,0 instead of 0,.5, and the output is between -1 and 1.  This means the mean of the output is centered around 0, which can make learning in the next layer easier.  tanh is almost always better in a **hidden layer** than the sigmoid. For the output layer, however, sigmoid makes sense for binary outcomes.  If we require an output of 0 or 1, it makes sense for the activation function to output between 0 and 1, rather than -1 and 1.
+tanh a shifted version of the sigmoid. The inflection point passes through 0,0 instead of 0,.5, and the output is between -1 and 1.  This means the mean of the output is centered around 0, which can make learning in the next layer easier.  tanh is almost always better in a **hidden layer** than the sigmoid because if speeds up learning [see here](https://stats.stackexchange.com/questions/330559/why-is-tanh-almost-always-better-than-sigmoid-as-an-activation-function). For the output layer, however, sigmoid makes sense for binary outcomes.  If we require an output of 0 or 1, it makes sense for the activation function to output between 0 and 1, rather than -1 and 1.
 
 
 ```python
@@ -330,7 +334,7 @@ ReLU, or rectified linear unit, outputs 0 for negative numbers, and the original
 
 **ReLU**: $f(x) = 0$ if $x\leq 0$; $f(x) = x$ otherwise
 
-ReLU is a commonly used and effective activation function because of speed.  Given that the output is zero when negative, some nodes become inactive (i.e. produce an output of 0).  Zero outputs take little computational power. Also, the constant gradient leads to faster learning in comparison to sigmoid and tanh, which come close to 0 with large positive and negative values.  Since the speed of our network is linked to the derivative, a derivative close to zero will result in very slow learning.
+ReLU is a commonly used and effective activation function because of speed.  Given that the **output** is zero when negative, some nodes become inactive (i.e. produce an output of 0).  Zero outputs take little computational power. Also, the constant gradient leads to faster learning in comparison to sigmoid and tanh, which come close to 0 with large positive and negative values.  Since the speed of our network is linked to the derivative, a derivative close to zero will result in very slow learning.
 
 
 ```python
@@ -366,7 +370,7 @@ a
 
 
 
-    array([[11.88799962]])
+    array([[15.38991897]])
 
 
 
@@ -433,6 +437,7 @@ w.shape
 ```python
 z_0 = X_train.dot(w)+b
 z_0.shape
+
 ```
 
 
@@ -451,13 +456,13 @@ a_0
 
 
 
-    array([[0.99998881],
-           [0.99998851],
-           [0.99999976],
+    array([[0.99999975],
+           [0.99999896],
+           [0.99999997],
            ...,
-           [0.99999975],
-           [0.99999962],
-           [0.99999243]])
+           [0.99999995],
+           [0.99999989],
+           [0.99999181]])
 
 
 
@@ -470,16 +475,16 @@ a_0_relu[:10]
 
 
 
-    [array([11.4006103]),
-     array([11.3740089]),
-     array([15.25445796]),
-     array([13.32124049]),
-     array([11.72364798]),
-     array([18.22812126]),
-     array([15.32797183]),
-     array([14.29446005]),
-     array([14.03517985]),
-     array([15.68114616])]
+    [array([15.20700966]),
+     array([13.77844831]),
+     array([17.24097324]),
+     array([12.87291091]),
+     array([14.16099444]),
+     array([19.17932193]),
+     array([17.33664651]),
+     array([17.96803735]),
+     array([18.24960687]),
+     array([13.90787165])]
 
 
 
@@ -529,13 +534,13 @@ z_1
 
 
 
-    array([[ -0.96657309, -10.37354677, -10.88464165,  -2.147581  ],
-           [ -2.96445823, -11.2872077 ,  -9.19432024,  -0.63203507],
-           [ -3.54210132, -15.31123522, -10.7219304 ,   1.99791247],
+    array([[ -5.53262956,  -1.68351509,   1.84539304, -11.20334615],
+           [ -2.51595217,  -7.95232536,  -0.30297909,  -8.92697794],
+           [ -4.48864059, -10.23488287,   1.85017614, -12.69396906],
            ...,
-           [ -5.41328573, -19.12287985,  -1.91474799,   2.77273493],
-           [  0.83420605, -20.7922142 ,   1.57724078,   3.75189613],
-           [ -2.64842288, -14.76183493,  -0.37921728,   6.67815852]])
+           [ -3.13100651,  -7.22853855,   8.10352564, -14.83130325],
+           [ -0.2824967 , -11.93247387,   6.32355103, -11.53392139],
+           [  3.43181092,  -2.92483271,   5.88807482, -10.34635414]])
 
 
 
@@ -548,13 +553,13 @@ a_1
 
 
 
-    array([[2.75564084e-01, 3.12472863e-05, 1.87435589e-05, 1.04557486e-01],
-           [4.90576068e-02, 1.25320621e-05, 1.01604590e-04, 3.47049235e-01],
-           [2.81377683e-02, 2.24086109e-07, 2.20554141e-05, 8.80577726e-01],
+    array([[3.93998905e-03, 1.56630574e-01, 8.63585285e-01, 1.36283309e-05],
+           [7.47474125e-02, 3.51719301e-04, 4.24829381e-01, 1.32741001e-04],
+           [1.11110647e-02, 3.58947770e-05, 8.64147783e-01, 3.06957288e-06],
            ...,
-           [4.43719528e-03, 4.95494458e-09, 1.28448379e-01, 9.41184564e-01],
-           [6.97243541e-01, 9.33374878e-10, 8.28813390e-01, 9.77065159e-01],
-           [6.60862812e-02, 3.88165004e-07, 4.06315694e-01, 9.98743488e-01]])
+           [4.18462323e-02, 7.25054405e-04, 9.99697621e-01, 3.62115139e-07],
+           [4.29841784e-01, 6.57339282e-06, 9.98209648e-01, 9.79213366e-06],
+           [9.68684049e-01, 5.09395574e-02, 9.97235356e-01, 3.21086128e-05]])
 
 
 
@@ -597,17 +602,17 @@ y_hat[:5]
 
 
 
-    array([[0],
+    array([[1],
            [1],
            [1],
            [1],
-           [0]])
+           [1]])
 
 
 
 ## Back propagation
 
-Moreover, neural nets are dynamic in the sense that, after a certain number of data points have been passed through the model, the weights will be *updated* with an eye toward optimizing our loss function. (Thinking back to biological neurons, this is like revising their activation potentials.) Typically, this is  done  by using some version of gradient descent.
+After a certain number of data points have been passed through the model, the weights will be *updated* with an eye toward optimizing our loss function. (Thinking back to biological neurons, this is like revising their activation potentials.) Typically, this is  done  by using some version of gradient descent.
 
 ![bprop](img/BackProp_web.png)
 
@@ -617,7 +622,7 @@ The loss function tells us how well our model performed by comparing the predict
 
 When we train our models with Keras, we will watch the loss function's progress across epochs.  A decreasing loss function will show us that our model is **improving**.
 
-The loss function is associated with the nature of our output. In logistic regression, our output was binary, so our cost function was the negative loglikelihood, aka **cross-entropy**.
+The loss function is associated with the nature of our output. In logistic regression, our output was binary, so our loss function was the negative loglikelihood, aka **cross-entropy**.
 
 $$ \Large -\ loglikelihood = -\frac{1}{m} * \sum\limits_{i=1}^m y_i\log{p_i} + (1-y_i)\log(1-p_i) $$
     
@@ -635,19 +640,19 @@ y_train*np.log(output) + (1-y_train) * np.log(1-output)
 
 
 
-    array([[-0.67045971, -0.67045971, -0.67045971, ..., -0.67045971,
-            -0.71636135, -0.71636135],
-           [-0.69897023, -0.69897023, -0.69897023, ..., -0.69897023,
-            -0.68735784, -0.68735784],
-           [-0.71729024, -0.71729024, -0.71729024, ..., -0.71729024,
-            -0.66957329, -0.66957329],
+    array([[-0.73934633, -0.73934633, -0.73934633, ..., -0.73934633,
+            -0.64898847, -0.64898847],
+           [-0.70154703, -0.70154703, -0.70154703, ..., -0.70154703,
+            -0.6848173 , -0.6848173 ],
+           [-0.72450823, -0.72450823, -0.72450823, ..., -0.72450823,
+            -0.66273981, -0.66273981],
            ...,
-           [-0.72151471, -0.72151471, -0.72151471, ..., -0.72151471,
-            -0.66556222, -0.66556222],
-           [-0.65750989, -0.65750989, -0.65750989, ..., -0.65750989,
-            -0.73010157, -0.73010157],
-           [-0.71740907, -0.71740907, -0.71740907, ..., -0.71740907,
-            -0.66946001, -0.66946001]])
+           [-0.72661543, -0.72661543, -0.72661543, ..., -0.72661543,
+            -0.66076288, -0.66076288],
+           [-0.68766904, -0.68766904, -0.68766904, ..., -0.68766904,
+            -0.6986555 , -0.6986555 ],
+           [-0.6403236 , -0.6403236 , -0.6403236 , ..., -0.6403236 ,
+            -0.74891747, -0.74891747]])
 
 
 
@@ -660,7 +665,7 @@ neg_ll
 
 
 
-    996.9623240042554
+    997.0434294034095
 
 
 
@@ -671,11 +676,11 @@ Good [resource](https://mattmazur.com/2015/03/17/a-step-by-step-backpropagation-
 Here is a good summary of different [loss functions]( https://ml-cheatsheet.readthedocs.io/en/latest/loss_functions.html):
    
 
-We use the loss function to calculate the gradient.  The gradient of the loss function is calculated in relation to each parameter of our neural net.
+We not only use the the loss function to see our model is improving, we use it to update our parameters.  The gradient of the loss function is calculated in relation to each parameter of our neural net.
 
 $$\large dw_1 = \displaystyle\frac{d\mathcal{L}(\hat y , y)}{d w_1} = \displaystyle\frac{d\mathcal{L}(\hat y , y)}{d \hat y}\displaystyle\frac{d\hat y}{dz}\displaystyle\frac{dz}{d w_1} = x_1 dz $$
 
-Working through the Learn's Intro to Neural Networks will allow you to dive deep into the partial derivatives. For now, I will just point out that the derivative of the weight is multiplied by the derivative of our activation function, *dz*.  Here you can get a glimpse of the problem with the sigmoid/tanh as an activation function for a hidden layer.  Since the derivative of the sigmoid approaches zero for very large positive or negative numbers, the update to the parameters (the partial derivative multiplied by a learning rate ($ \alpha $) approaches zero.
+Working through the Learn's Intro to Neural Networks will allow you to dive deep into the partial derivatives. For now, I will just point out that the derivative of the weight is multiplied by the derivative of our activation function, *dz*.  Here you can get a glimpse of the problem with the sigmoid/tanh as an activation function for a hidden layer.  Since the derivative of the sigmoid approaches zero for very large positive or negative numbers, the update to the parameters (the partial derivative multiplied by a learning rate ($ \alpha $)) approaches zero.
 
 $$w_1 := w_1 - \alpha dw_1$$
 
@@ -758,8 +763,3 @@ Forward propogation with the **blue** tinted arrows computes the output of each 
 Backprop calculates the partial derivative (**green** circles) for each weight (**brown** line) and bias.
 
 Then the optimizer multiplies a **learning rate** ($\eta$) to each partial derivative to calculate a new weight which will be applied to the next batch that passes through.
-
-
-```python
-
-```
