@@ -26,10 +26,6 @@ import warnings
 warnings.filterwarnings('ignore')
 ```
 
-    The autoreload extension is already loaded. To reload it, use:
-      %reload_ext autoreload
-
-
 # Background
 
 Neural networks have been around for a while. They are over 70 years old, dating back to  their proposal in 1944 by Warren McCullough and Walter Pitts. These first proposed neural nets had thresholds and weights, but no layers and no specific training mechanisms.
@@ -144,7 +140,7 @@ We will instantiate our weight with small random numbers.
 one_random_student(mccalister)
 ```
 
-    Jason
+    Karim
 
 
 
@@ -162,18 +158,18 @@ one_random_student(mccalister)
 
 
 ```python
-w = np.random.uniform(0, .1, (flat_image.shape[0],1))
+w = np.random.uniform(-.1, .1, (flat_image.shape[0],1))
 w[:5]
 ```
 
 
 
 
-    array([[0.04320711],
-           [0.02877802],
-           [0.09541247],
-           [0.06892253],
-           [0.05450707]])
+    array([[ 0.09558758],
+           [ 0.0242726 ],
+           [-0.05891346],
+           [ 0.06385455],
+           [-0.0206179 ]])
 
 
 
@@ -200,7 +196,7 @@ z
 
 
 
-    array([[15.38991897]])
+    array([[-0.93152654]])
 
 
 
@@ -255,7 +251,7 @@ When we build our models in Keras, we will specify the activation function of bo
 one_random_student(mccalister)
 ```
 
-    Luluva
+    Jacob
 
 
 ![don't look down](https://media.giphy.com/media/kGX9vntSO8McNlDaVj/giphy.gif)
@@ -289,7 +285,7 @@ a
 
 
 
-    array([[0.99999979]])
+    array([[0.28261512]])
 
 
 
@@ -344,7 +340,7 @@ a
 
 
 
-    array([[1.]])
+    array([[-0.73130483]])
 
 
 
@@ -404,7 +400,7 @@ a
 
 
 
-    array([[15.38991897]])
+    0
 
 
 
@@ -413,6 +409,8 @@ Notice that ReLU ("Rectified Linear Unit") increases without bound as $x\rightar
 There are many activation functions, [see here](https://towardsdatascience.com/comparison-of-activation-functions-for-deep-neural-networks-706ac4284c8a). 
 
 Neural networks draw their inspiration from the biology of our own brains, which are of course also accurately described as 'neural networks'. A human brain contains around $10^{11}$ neurons, connected very **densely**.
+
+![dense](img/dogcat.gif)
 
 Our nodes will be taking in input from multiple sources. Let's add the entire training set as our input. 
 
@@ -445,10 +443,15 @@ X_train.shape
 
 
 
+### Question: What dimension should our weight vector now be?
+
 
 ```python
-# Question: What dimension should our weight vector now be?
+one_random_student(mccalister)
 ```
+
+    Leana
+
 
 
 ```python
@@ -464,22 +467,15 @@ location across the entire training set'''
 
 
 
-
-```python
-w.shape
-```
-
-
-
-
-    (64, 1)
-
-
+### Question: What should be the dimension of the output of our collector function be?
 
 
 ```python
-# Question: What should be the dimension of our collector function be?
+one_random_student(mccalister)
 ```
+
+    Jacob
+
 
 
 ```python
@@ -517,13 +513,13 @@ a_0
 
 
 
-    array([[0.99999975],
-           [0.99999896],
-           [0.99999997],
+    array([[0.6127075 ],
+           [0.3560587 ],
+           [0.2188547 ],
            ...,
-           [0.99999995],
-           [0.99999989],
-           [0.99999181]])
+           [0.93052149],
+           [0.16394661],
+           [0.9702321 ]])
 
 
 
@@ -536,16 +532,16 @@ a_0_relu[:10]
 
 
 
-    [array([15.20700966]),
-     array([13.77844831]),
-     array([17.24097324]),
-     array([12.87291091]),
-     array([14.16099444]),
-     array([19.17932193]),
-     array([17.33664651]),
-     array([17.96803735]),
-     array([18.24960687]),
-     array([13.90787165])]
+    [array([0.45870744]),
+     0,
+     0,
+     0,
+     array([0.60877957]),
+     0,
+     0,
+     array([0.10321636]),
+     array([0.32730265]),
+     0]
 
 
 
@@ -608,13 +604,13 @@ z_1
 
 
 
-    array([[ -5.53262956,  -1.68351509,   1.84539304, -11.20334615],
-           [ -2.51595217,  -7.95232536,  -0.30297909,  -8.92697794],
-           [ -4.48864059, -10.23488287,   1.85017614, -12.69396906],
+    array([[ 1.50347252, -5.16805187, -6.65046129, -3.77379873],
+           [-0.99974564, -2.31782803, -3.24993135, -4.52351551],
+           [-0.18421402,  1.31208183, -3.83192472, -4.39594412],
            ...,
-           [ -3.13100651,  -7.22853855,   8.10352564, -14.83130325],
-           [ -0.2824967 , -11.93247387,   6.32355103, -11.53392139],
-           [  3.43181092,  -2.92483271,   5.88807482, -10.34635414]])
+           [-3.4917316 , -5.66362861, -3.14691551, -7.34895916],
+           [-4.93811851, -3.89793808, -1.7056991 , -9.41723723],
+           [-1.57646452, -2.48353578,  0.42800999, -1.81943631]])
 
 
 
@@ -627,19 +623,27 @@ a_1
 
 
 
-    array([[3.93998905e-03, 1.56630574e-01, 8.63585285e-01, 1.36283309e-05],
-           [7.47474125e-02, 3.51719301e-04, 4.24829381e-01, 1.32741001e-04],
-           [1.11110647e-02, 3.58947770e-05, 8.64147783e-01, 3.06957288e-06],
+    array([[8.18091819e-01, 5.66339715e-03, 1.29175453e-03, 2.24491244e-02],
+           [2.68991434e-01, 8.96571748e-02, 3.73293542e-02, 1.07343342e-02],
+           [4.54076290e-01, 7.87861312e-01, 2.12083315e-02, 1.21771261e-02],
            ...,
-           [4.18462323e-02, 7.25054405e-04, 9.99697621e-01, 3.62115139e-07],
-           [4.29841784e-01, 6.57339282e-06, 9.98209648e-01, 9.79213366e-06],
-           [9.68684049e-01, 5.09395574e-02, 9.97235356e-01, 3.21086128e-05]])
+           [2.95484096e-02, 3.45790451e-03, 4.12129877e-02, 6.42848022e-04],
+           [7.11705678e-03, 1.98804429e-02, 1.53722395e-01, 8.13037400e-05],
+           [1.71296776e-01, 7.70204734e-02, 6.05398373e-01, 1.39501525e-01]])
 
 
 
 Now each of these neurons has a set of weights and a bias associated with it.
 
 ### What is the shape of this weight matrix?
+
+
+```python
+one_random_student(mccalister)
+```
+
+    Leana
+
 
 
 ```python
@@ -720,19 +724,19 @@ y_train*np.log(output) + (1-y_train) * np.log(1-output)
 
 
 
-    array([[-0.73934633, -0.73934633, -0.73934633, ..., -0.73934633,
-            -0.64898847, -0.64898847],
-           [-0.70154703, -0.70154703, -0.70154703, ..., -0.70154703,
-            -0.6848173 , -0.6848173 ],
-           [-0.72450823, -0.72450823, -0.72450823, ..., -0.72450823,
-            -0.66273981, -0.66273981],
+    array([[-0.69847168, -0.69847168, -0.69847168, ..., -0.69847168,
+            -0.68785088, -0.68785088],
+           [-0.69918663, -0.69918663, -0.69918663, ..., -0.69918663,
+            -0.68714398, -0.68714398],
+           [-0.72831084, -0.72831084, -0.72831084, ..., -0.72831084,
+            -0.65917812, -0.65917812],
            ...,
-           [-0.72661543, -0.72661543, -0.72661543, ..., -0.72661543,
-            -0.66076288, -0.66076288],
-           [-0.68766904, -0.68766904, -0.68766904, ..., -0.68766904,
-            -0.6986555 , -0.6986555 ],
-           [-0.6403236 , -0.6403236 , -0.6403236 , ..., -0.6403236 ,
-            -0.74891747, -0.74891747]])
+           [-0.69445512, -0.69445512, -0.69445512, ..., -0.69445512,
+            -0.69184095, -0.69184095],
+           [-0.69765929, -0.69765929, -0.69765929, ..., -0.69765929,
+            -0.68865534, -0.68865534],
+           [-0.70831407, -0.70831407, -0.70831407, ..., -0.70831407,
+            -0.67820689, -0.67820689]])
 
 
 
@@ -745,7 +749,7 @@ neg_ll
 
 
 
-    997.0434294034095
+    996.1167068048533
 
 
 
@@ -760,7 +764,7 @@ We not only use the the loss function to see our model is improving, we use it t
 
 $$\large dw_1 = \displaystyle\frac{d\mathcal{L}(\hat y , y)}{d w_1} = \displaystyle\frac{d\mathcal{L}(\hat y , y)}{d \hat y}\displaystyle\frac{d\hat y}{dz}\displaystyle\frac{dz}{d w_1} = x_1 dz $$
 
-Working through the Learn's Intro to Neural Networks will allow you to dive deep into the partial derivatives. For now, I will just point out that the derivative of the weight is multiplied by the derivative of our activation function, *dz*.  Here you can get a glimpse of the problem with the sigmoid/tanh as an activation function for a hidden layer.  Since the derivative of the sigmoid approaches zero for very large positive or negative numbers, the update to the parameters (the partial derivative multiplied by a learning rate ($ \alpha $)) approaches zero.
+Working through the Learn's Intro to Neural Networks will allow you to dive deep into the partial derivatives. For now, I will just point out that the derivative of the weight is multiplied by the derivative of our activation function, *$d\hat{y}$*.  Here you can get a glimpse of the problem with the sigmoid/tanh as an activation function for a hidden layer.  Since the derivative of the sigmoid approaches zero for very large positive or negative numbers, the update to the parameters (the partial derivative multiplied by a learning rate ($ \alpha $)) approaches zero.
 
 $$w_1 := w_1 - \alpha dw_1$$
 
