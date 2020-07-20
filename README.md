@@ -3,7 +3,7 @@
 
 # Background
 
-Neural Networks have been around for a while. They are over 70 years old, dating back to  their proposal in 1944 by Warren McCullough and Walter Pitts. These first proposed neural nets had thresholds and weights, but no layers and no specific training mechanisms.
+Neural networks have been around for a while. They are over 70 years old, dating back to  their proposal in 1944 by Warren McCullough and Walter Pitts. These first proposed neural nets had thresholds and weights, but no layers and no specific training mechanisms.
 
 The "Perceptron" the first trainable neural network was created by Frank Rosenblatt in 1957. It consisted of a single layer with adjustable weights in the middle of input and output layers.
 
@@ -58,7 +58,7 @@ We can set our bias term to 0: there is ony one for a singal perceptron
 
 Our inputs, the pixel, each are multiplied by their respective weights and then summed together with the bias. 
 
-This ammounts to the dotproduct of the pixel value and the weights.
+This amounts to the dotproduct of the pixel value and the weights.
 
 
 # Question: Why do we have to transpose our flat_image?
@@ -104,7 +104,7 @@ We have a suite of activation functions to choose from.
 
 **tanh**: $f(x) = tanh(x) = \frac{e^x - e^{-x}}{e^x + e^{-x}}$
 
-tanh a shifted version of the sigmoid. The inflection point passes through 0,0 instead of 0,.5, and the output is between -1 and 1.  This means the mean of the output is centered around 0, which can make learning in the next layer easier.  tanh is almost always better in a **hidden layer** than the sigmoid. For the output layer, however, sigmoid makes sense for binary outcomes.  If we require an output of 0 or 1, it makes sense for the activation function to output between 0 and 1, rather than -1 and 1.
+tanh a shifted version of the sigmoid. The inflection point passes through 0,0 instead of 0,.5, and the output is between -1 and 1.  This means the mean of the output is centered around 0, which can make learning in the next layer easier.  tanh is almost always better in a **hidden layer** than the sigmoid because if speeds up learning [see here](https://stats.stackexchange.com/questions/330559/why-is-tanh-almost-always-better-than-sigmoid-as-an-activation-function). For the output layer, however, sigmoid makes sense for binary outcomes.  If we require an output of 0 or 1, it makes sense for the activation function to output between 0 and 1, rather than -1 and 1.
 
 One problem with tanh (and sigmoid), is that if our input is large, then the slope of the activation function flattens out.  When conducting backpropogation, we will use the derivative of the activation function as one of our terms multiplied by a learning rate to determine how big a step to take when adjusting our weights.  If our derivative is close to zero, the step will be very small, so the speed of our learning will be very slow, which is a huge problem.  This is called the **vanishing gradient** problem.
 
@@ -114,7 +114,7 @@ ReLU, or rectified linear unit, outputs 0 for negative numbers, and the original
 
 **ReLU**: $f(x) = 0$ if $x\leq 0$; $f(x) = x$ otherwise
 
-ReLU is a commonly used and effective activation function because of speed.  Given that the output is zero when negative, some nodes become inactive (i.e. produce an output of 0).  Zero outputs take little computational power. Also, the constant gradient leads to faster learning in comparison to sigmoid and tanh, which come close to 0 with large positive and negative values.  Since the speed of our network is linked to the derivative, a derivative close to zero will result in very slow learning.
+ReLU is a commonly used and effective activation function because of speed.  Given that the **output** is zero when negative, some nodes become inactive (i.e. produce an output of 0).  Zero outputs take little computational power. Also, the constant gradient leads to faster learning in comparison to sigmoid and tanh, which come close to 0 with large positive and negative values.  Since the speed of our network is linked to the derivative, a derivative close to zero will result in very slow learning.
 
 Notice that ReLU ("Rectified Linear Unit") increases without bound as $x\rightarrow\infty$. The advantages and drawbacks of this are discussed on [this page on stackexchange](https://stats.stackexchange.com/questions/126238/what-are-the-advantages-of-relu-over-sigmoid-function-in-deep-neural-networks)
 
@@ -130,13 +130,13 @@ Numpy allows us to easily calculate the predictions for the set of data:
 
 ```python
 '''The same as before.  Each weight is associated with one pixel 
-location accross the entire training set'''
+location across the entire training set'''
 ```
 
 
 
 
-    'The same as before.  Each weight is associated with one pixel \nlocation accross the entire training set'
+    'The same as before.  Each weight is associated with one pixel \nlocation across the entire training set'
 
 
 
@@ -189,7 +189,7 @@ Now each of these neurons has a set of weights and a bias associated with it.
 
 ## Back propagation
 
-Moreover, neural nets are dynamic in the sense that, after a certain number of data points have been passed through the model, the weights will be *updated* with an eye toward optimizing our loss function. (Thinking back to biological neurons, this is like revising their activation potentials.) Typically, this is  done  by using some version of gradient descent.
+After a certain number of data points have been passed through the model, the weights will be *updated* with an eye toward optimizing our loss function. (Thinking back to biological neurons, this is like revising their activation potentials.) Typically, this is  done  by using some version of gradient descent.
 
 ![bprop](img/BackProp_web.png)
 
@@ -199,7 +199,7 @@ The loss function tells us how well our model performed by comparing the predict
 
 When we train our models with Keras, we will watch the loss function's progress across epochs.  A decreasing loss function will show us that our model is **improving**.
 
-The loss function is associated with the nature of our output. In logistic regression, our output was binary, so our cost function was the negative loglikelihood, aka **cross-entropy**.
+The loss function is associated with the nature of our output. In logistic regression, our output was binary, so our loss function was the negative loglikelihood, aka **cross-entropy**.
 
 $$ \Large -\ loglikelihood = -\frac{1}{m} * \sum\limits_{i=1}^m y_i\log{p_i} + (1-y_i)\log(1-p_i) $$
     
@@ -211,11 +211,11 @@ Good [resource](https://mattmazur.com/2015/03/17/a-step-by-step-backpropagation-
 Here is a good summary of different [loss functions]( https://ml-cheatsheet.readthedocs.io/en/latest/loss_functions.html):
    
 
-We use the loss function to calculate the gradient.  The gradient of the loss function is calculated in relation to each parameter of our neural net.
+We not only use the the loss function to see our model is improving, we use it to update our parameters.  The gradient of the loss function is calculated in relation to each parameter of our neural net.
 
 $$\large dw_1 = \displaystyle\frac{d\mathcal{L}(\hat y , y)}{d w_1} = \displaystyle\frac{d\mathcal{L}(\hat y , y)}{d \hat y}\displaystyle\frac{d\hat y}{dz}\displaystyle\frac{dz}{d w_1} = x_1 dz $$
 
-Working through the Learn's Intro to Neural Networks will allow you to dive deep into the partial derivatives. For now, I will just point out that the derivative of the weight is multiplied by the derivative of our activation function, *dz*.  Here you can get a glimpse of the problem with the sigmoid/tanh as an activation function for a hidden layer.  Since the derivative of the sigmoid approaches zero for very large positive or negative numbers, the update to the parameters (the partial derivative multiplied by a learning rate ($ \alpha $) approaches zero.
+Working through the Learn's Intro to Neural Networks will allow you to dive deep into the partial derivatives. For now, I will just point out that the derivative of the weight is multiplied by the derivative of our activation function, *dz*.  Here you can get a glimpse of the problem with the sigmoid/tanh as an activation function for a hidden layer.  Since the derivative of the sigmoid approaches zero for very large positive or negative numbers, the update to the parameters (the partial derivative multiplied by a learning rate ($ \alpha $)) approaches zero.
 
 $$w_1 := w_1 - \alpha dw_1$$
 
