@@ -680,6 +680,8 @@ Good [resource](https://mattmazur.com/2015/03/17/a-step-by-step-backpropagation-
 Here is a good summary of different [loss functions]( https://ml-cheatsheet.readthedocs.io/en/latest/loss_functions.html):
    
 
+# Gradient Descent, Epochs, and Batches
+
 We not only use the the loss function to see our model is improving, we use it to update our parameters.  The gradient of the loss function is calculated in relation to each parameter of our neural net.
 
 $$\large dw_1 = \displaystyle\frac{d\mathcal{L}(\hat y , y)}{d w_1} = \displaystyle\frac{d\mathcal{L}(\hat y , y)}{d \hat y}\displaystyle\frac{d\hat y}{dz}\displaystyle\frac{dz}{d w_1} = x_1 dz $$
@@ -691,8 +693,6 @@ $$w_1 := w_1 - \alpha dw_1$$
 The speed of our neural net goes way down as a result, since the updates are so incrementally small.
 
 For a deep dive into the fitting process, reference Chapter 11 in [Elements of Statistical Learning](https://web.stanford.edu/~hastie/ElemStatLearn/printings/ESLII_print12.pdf)
-
-# Gradient Descent, Epochs, and Batches
 
 Gradient descent can be performed in several different ways.  Unlike sklearn implimentation of linear regression, which finds the minimum of the loss with a closed form solution, neural networks move down the gradient **incrementally.**  
 
